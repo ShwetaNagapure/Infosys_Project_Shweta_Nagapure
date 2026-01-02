@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUL Prediction System</title>
+    <style> 
+        /* ============================================
+   NASA C-MAPSS RUL Prediction Upload Page
+   Light Theme with Flying Objects Animation
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --nasa-blue: #0B3D91;
+    --nasa-red: #FC3D21;
+    --nasa-light-blue: #1E5AA8;
+    --nasa-accent: #00A4E4;
+    --text-primary: #1A1A1A;
+    --text-secondary: #5F6368;
+}
+
+body {
+    font-family: 'Segoe UI', 'Roboto', -apple-system, sans-serif;
+    background: linear-gradient(135deg, #E8F0FE 0%, #D2E3FC 50%, #C8E1FF 100%);
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Animated Background Grid */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(11, 61, 145, .03) 25%, rgba(11, 61, 145, .03) 26%, transparent 27%, transparent 74%, rgba(11, 61, 145, .03) 75%, rgba(11, 61, 145, .03) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(11, 61, 145, .03) 25%, rgba(11, 61, 145, .03) 26%, transparent 27%, transparent 74%, rgba(11, 61, 145, .03) 75%, rgba(11, 61, 145, .03) 76%, transparent 77%, transparent);
+    background-size: 60px 60px;
+    z-index: 0;
+    pointer-events: none;
+    animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 60px; }
+}
+
+/* Flying Objects - Satellites, Rockets, and Aircraft */
+.flying-objects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.flying-object {
+    position: absolute;
+    font-size: 2em;
+    opacity: 0;
+    animation: fly linear infinite;
+    filter: drop-shadow(2px 2px 4px rgba(11, 61, 145, 0.3));
+}
+
+/* Multiple flying paths */
+.flying-object:nth-child(1) {
+    top: 15%;
+    animation: flyAcross1 15s ease-in-out infinite;
+    animation-delay: 0s;
+}
+
+.flying-object:nth-child(2) {
+    top: 45%;
+    animation: flyAcross2 18s ease-in-out infinite;
+    animation-delay: 5s;
+}
+
+.flying-object:nth-child(3) {
+    top: 70%;
+    animation: flyAcross3 20s ease-in-out infinite;
+    animation-delay: 8s;
+}
+
+.flying-object:nth-child(4) {
+    top: 30%;
+    animation: flyDiagonal1 16s ease-in-out infinite;
+    animation-delay: 3s;
+}
+
+.flying-object:nth-child(5) {
+    top: 60%;
+    animation: flyDiagonal2 22s ease-in-out infinite;
+    animation-delay: 10s;
+}
+
+.flying-object:nth-child(6) {
+    top: 85%;
+    animation: flyAcross1 14s ease-in-out infinite;
+    animation-delay: 12s;
+}
+
+@keyframes flyAcross1 {
+    0% {
+        left: -100px;
+        opacity: 0;
+        transform: translateY(0) rotate(0deg);
+    }
+    10% {
+        opacity: 0.7;
+    }
+    90% {
+        opacity: 0.7;
+    }
+    100% {
+        left: calc(100% + 100px);
+        opacity: 0;
+        transform: translateY(-20px) rotate(5deg);
+    }
+}
+
+@keyframes flyAcross2 {
+    0% {
+        right: -100px;
+        left: auto;
+        opacity: 0;
+        transform: translateY(0) rotate(180deg) scaleX(-1);
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        right: calc(100% + 100px);
+        opacity: 0;
+        transform: translateY(30px) rotate(185deg) scaleX(-1);
+    }
+}
+
+@keyframes flyAcross3 {
+    0% {
+        left: -100px;
+        opacity: 0;
+        transform: translateY(0) rotate(-5deg);
+    }
+    10% {
+        opacity: 0.5;
+    }
+    90% {
+        opacity: 0.5;
+    }
+    100% {
+        left: calc(100% + 100px);
+        opacity: 0;
+        transform: translateY(40px) rotate(5deg);
+    }
+}
+
+@keyframes flyDiagonal1 {
+    0% {
+        left: -100px;
+        top: 100%;
+        opacity: 0;
+        transform: rotate(45deg);
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        left: calc(100% + 100px);
+        top: -100px;
+        opacity: 0;
+        transform: rotate(55deg);
+    }
+}
+
+@keyframes flyDiagonal2 {
+    0% {
+        right: -100px;
+        left: auto;
+        top: -100px;
+        opacity: 0;
+        transform: rotate(-135deg) scaleX(-1);
+    }
+    10% {
+        opacity: 0.5;
+    }
+    90% {
+        opacity: 0.5;
+    }
+    100% {
+        right: calc(100% + 100px);
+        top: 100%;
+        opacity: 0;
+        transform: rotate(-125deg) scaleX(-1);
+    }
+}
+
+/* Container - Main Upload Panel */
+.container {
+    max-width: 650px;
+    margin: 50px auto;
+    background: white;
+    border-radius: 24px;
+    padding: 45px;
+    box-shadow: 
+        0 10px 40px rgba(11, 61, 145, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 2px solid rgba(11, 61, 145, 0.1);
+    position: relative;
+    z-index: 2;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* NASA Accent Border */
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--nasa-blue), var(--nasa-accent), var(--nasa-red));
+    border-radius: 24px 24px 0 0;
+}
+
+/* Header Section */
+h1 {
+    color: var(--nasa-blue);
+    margin-bottom: 12px;
+    font-size: 2.5em;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+h1::after {
+    content: '';
+    flex: 1;
+    height: 3px;
+    background: linear-gradient(90deg, var(--nasa-accent), transparent);
+    border-radius: 3px;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 35px;
+    font-size: 1.15em;
+    font-weight: 500;
+    padding-left: 48px;
+    letter-spacing: 0.3px;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 28px;
+    animation: slideIn 0.5s ease-out backwards;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.1s; }
+.form-group:nth-child(2) { animation-delay: 0.2s; }
+.form-group:nth-child(3) { animation-delay: 0.3s; }
+.form-group:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Input Fields */
+input[type="file"],
+select,
+input[type="number"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #E1E4E8;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: #F8F9FA;
+    font-family: inherit;
+}
+
+input[type="file"]:hover,
+select:hover,
+input[type="number"]:hover {
+    border-color: var(--nasa-accent);
+    background: white;
+}
+
+input[type="file"]:focus,
+select:focus,
+input[type="number"]:focus {
+    outline: none;
+    border-color: var(--nasa-blue);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(11, 61, 145, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Select Dropdown */
+select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230B3D91' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
+
+/* File Input Styling */
+input[type="file"] {
+    cursor: pointer;
+    position: relative;
+}
+
+input[type="file"]::file-selector-button {
+    padding: 8px 20px;
+    border: none;
+    background: linear-gradient(135deg, var(--nasa-blue), var(--nasa-light-blue));
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 15px;
+    transition: all 0.3s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background: linear-gradient(135deg, var(--nasa-light-blue), var(--nasa-accent));
+    transform: scale(1.05);
+}
+
+/* Threshold Group */
+.threshold-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.threshold-group > div {
+    background: rgba(11, 61, 145, 0.03);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(11, 61, 145, 0.1);
+}
+
+.threshold-group label[style] {
+    font-size: 12px !important;
+    color: var(--text-secondary) !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    margin-bottom: 8px !important;
+}
+
+/* Submit Button */
+button[type="submit"] {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--nasa-blue) 0%, var(--nasa-light-blue) 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    box-shadow: 0 6px 20px rgba(11, 61, 145, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+button[type="submit"]::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+button[type="submit"]:hover::before {
+    width: 400px;
+    height: 400px;
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(11, 61, 145, 0.4);
+}
+
+button[type="submit"]:active {
+    transform: translateY(-1px);
+}
+
+/* Flash Messages */
+.flash {
+    padding: 14px 20px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #D32F2F, #C62828);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+    animation: shake 0.5s ease;
+    border-left: 5px solid #B71C1C;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* Feature Badge */
+.feature-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+    color: var(--nasa-blue);
+    border-radius: 20px;
+    font-size: 12px;
+    margin: 5px 5px 5px 0;
+    font-weight: 600;
+    border: 1px solid rgba(11, 61, 145, 0.2);
+    letter-spacing: 0.3px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px auto;
+        padding: 30px 25px;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+    
+    .subtitle {
+        font-size: 1em;
+    }
+    
+    .threshold-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .flying-object {
+        font-size: 1.5em;
+    }
+}
+
+/* Loading State */
+button[type="submit"]:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Focus Accessibility */
+*:focus-visible {
+    outline: 3px solid var(--nasa-accent);
+    outline-offset: 2px;
+}  </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 RUL Prediction</h1>
+        <p class="subtitle">Predictive Maintenance System</p>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash">{{ messages[0] }}</div>
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>📊 Dataset Model</label>
+                <select name="fd_model">
+                    <option value="FD001">FD001 - Single Fault Mode</option>
+                    <option value="FD002">FD002 - Multiple Fault Modes</option>
+                    <option value="FD003">FD003 - Single Fault Mode</option>
+                    <option value="FD004">FD004 - Multiple Fault Modes</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>📁 Upload Unseen Data</label>
+                <input type="file" name="unseen" required accept=".txt">
+            </div>
+            
+            <div class="form-group">
+                <label>📈 Upload True RUL</label>
+                <input type="file" name="true_rul" required accept=".txt">
+            </div>
+            
+            <div class="form-group">
+                <label>⚠️ Alert Thresholds (cycles)</label>
+                <div class="threshold-group">
+                    <div>
+                        <label style="font-size: 12px; color: #666;">Warning</label>
+                        <input type="number" name="warning" value="50" min="1">
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; color: #666;">Critical</label>
+                        <input type="number" name="critical" value="20" min="1">
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit">🚀 Run Prediction</button>
+        </form>
+    </div>
+</body>
+</html>
